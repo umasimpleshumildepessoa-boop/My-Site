@@ -1,43 +1,83 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const menu = document.getElementById("menu");
-const gameOverScreen = document.getElementById("gameOver");
-const skinsMenu = document.getElementById("skinsMenu");
 
-const scoreText = document.getElementById("score");
-const finalScore = document.getElementById("finalScore");
-const bestScore = document.getElementById("bestScore");
+// ==============================
+// ELEMENTOS
+// ==============================
 
-const startButton = document.getElementById("startButton");
-const restartButton = document.getElementById("restartButton");
+const menu =
+    document.getElementById("menu");
 
-const skinsButton = document.getElementById("skinsButton");
-const gameOverSkinsButton = document.getElementById("gameOverSkinsButton");
-const backButton = document.getElementById("backButton");
+const skinsMenu =
+    document.getElementById("skinsMenu");
 
-const skinList = document.getElementById("skinList");
+const gameOverScreen =
+    document.getElementById("gameOver");
+
+const scoreText =
+    document.getElementById("score");
+
+const finalScore =
+    document.getElementById("finalScore");
+
+const bestScore =
+    document.getElementById("bestScore");
+
+const startButton =
+    document.getElementById("startButton");
+
+const restartButton =
+    document.getElementById("restartButton");
+
+const skinsButton =
+    document.getElementById("skinsButton");
+
+const gameOverSkinsButton =
+    document.getElementById("gameOverSkinsButton");
+
+const backButton =
+    document.getElementById("backButton");
+
+const skinList =
+    document.getElementById("skinList");
+
+
+// ==============================
+// VARIÁVEIS DO JOGO
+// ==============================
 
 let bird;
 let pipes;
 let score;
 
-let best = Number(localStorage.getItem("flappyBest")) || 0;
+let best =
+    Number(localStorage.getItem("flappyBest")) || 0;
 
 let gameRunning = false;
 let gameStarted = false;
 
+
+// ==============================
+// CONFIGURAÇÕES
+// ==============================
+
 const gravity = 0.42;
+
 const jumpPower = -7.5;
+
 const pipeSpeed = 2.5;
+
 const pipeWidth = 65;
+
 const pipeGap = 155;
+
 const groundHeight = 55;
 
 
-// =========================
+// ==============================
 // SKINS
-// =========================
+// ==============================
 
 const skins = [
     "Skin1.png",
@@ -45,12 +85,27 @@ const skins = [
     "Skin3.png"
 ];
 
+
+// Skin salva no navegador
+
 let selectedSkin =
-    localStorage.getItem("flappySkin") || "Skin1.png";
+    localStorage.getItem("flappySkin");
+
+
+// Se não existir uma skin salva,
+// usa Skin1
+
+if (!skins.includes(selectedSkin)) {
+    selectedSkin = "Skin1.png";
+}
+
+
+// Imagens
 
 const birdImages = {};
 
 for (const skin of skins) {
+
     const image = new Image();
 
     image.src = "images/" + skin;
@@ -59,33 +114,51 @@ for (const skin of skins) {
 }
 
 
-// Criar menu de skins
+// ==============================
+// MENU DE SKINS
+// ==============================
+
 function createSkinMenu() {
 
     skinList.innerHTML = "";
 
     for (const skin of skins) {
 
-        const skinButton =
+        const button =
             document.createElement("div");
 
-        skinButton.className = "skin";
+        button.className = "skin";
+
+
+        // Marca a skin selecionada
 
         if (skin === selectedSkin) {
-            skinButton.classList.add("selected");
+
+            button.classList.add(
+                "selected"
+            );
         }
+
+
+        // Imagem
 
         const image =
             document.createElement("img");
 
-        image.src = "images/" + skin;
+        image.src =
+            "images/" + skin;
+
         image.alt = skin;
 
-        skinButton.appendChild(image);
 
-        skinButton.addEventListener(
+        button.appendChild(image);
+
+
+        // Quando clicar
+
+        button.addEventListener(
             "click",
-            () => {
+            function () {
 
                 selectedSkin = skin;
 
@@ -98,40 +171,57 @@ function createSkinMenu() {
             }
         );
 
-        skinList.appendChild(skinButton);
+
+        skinList.appendChild(button);
     }
 }
 
 
-// =========================
-// JOGO
-// =========================
+// ==============================
+// RESETAR JOGO
+// ==============================
 
 function resetGame() {
 
     bird = {
+
         x: 80,
+
         y: 280,
+
         radius: 20,
+
         velocity: 0,
+
         rotation: 0
     };
 
+
     pipes = [];
+
     score = 0;
 
     scoreText.textContent = "0";
 
     gameStarted = false;
+
     gameRunning = true;
 
+
     menu.classList.add("hidden");
+
     gameOverScreen.classList.add("hidden");
+
     skinsMenu.classList.add("hidden");
+
 
     addPipe();
 }
 
+
+// ==============================
+// ADICIONAR CANO
+// ==============================
 
 function addPipe() {
 
@@ -143,19 +233,28 @@ function addPipe() {
         pipeGap -
         70;
 
+
     const topHeight =
         Math.floor(
             Math.random() *
             (maxTop - minTop + 1)
         ) + minTop;
 
+
     pipes.push({
+
         x: canvas.width,
+
         top: topHeight,
+
         scored: false
     });
 }
 
+
+// ==============================
+// VOAR
+// ==============================
 
 function flap() {
 
@@ -167,9 +266,14 @@ function flap() {
 }
 
 
+// ==============================
+// GAME OVER
+// ==============================
+
 function endGame() {
 
     gameRunning = false;
+
 
     if (score > best) {
 
@@ -181,33 +285,50 @@ function endGame() {
         );
     }
 
+
     finalScore.textContent = score;
+
     bestScore.textContent = best;
 
-    gameOverScreen.classList.remove("hidden");
+
+    gameOverScreen.classList.remove(
+        "hidden"
+    );
 }
 
+
+// ==============================
+// ATUALIZAÇÃO
+// ==============================
 
 function update() {
 
     if (!gameRunning) return;
 
+
     if (gameStarted) {
 
         bird.velocity += gravity;
+
         bird.y += bird.velocity;
 
-        bird.rotation = Math.min(
-            Math.max(
-                bird.velocity * 0.08,
-                -0.5
-            ),
-            1.2
-        );
+
+        bird.rotation =
+            Math.min(
+                Math.max(
+                    bird.velocity * 0.08,
+                    -0.5
+                ),
+                1.2
+            );
+
 
         for (const pipe of pipes) {
 
             pipe.x -= pipeSpeed;
+
+
+            // Pontuação
 
             if (
                 !pipe.scored &&
@@ -218,60 +339,84 @@ function update() {
 
                 score++;
 
-                scoreText.textContent = score;
+                scoreText.textContent =
+                    score;
             }
+
+
+            // Colisão horizontal
 
             const hitX =
                 bird.x + bird.radius > pipe.x &&
                 bird.x - bird.radius <
                     pipe.x + pipeWidth;
 
+
+            // Cano superior
+
             const hitTop =
                 bird.y - bird.radius <
                 pipe.top;
 
+
+            // Cano inferior
+
             const bottomPipeY =
                 pipe.top + pipeGap;
+
 
             const hitBottom =
                 bird.y + bird.radius >
                 bottomPipeY;
 
+
             if (
                 hitX &&
                 (hitTop || hitBottom)
             ) {
+
                 endGame();
             }
         }
+
+
+        // Remove canos antigos
 
         pipes = pipes.filter(
             pipe =>
                 pipe.x + pipeWidth > 0
         );
 
+
+        // Adiciona novo cano
+
         if (
             pipes.length === 0 ||
             pipes[pipes.length - 1].x <
                 canvas.width - 220
         ) {
+
             addPipe();
         }
+
+
+        // Colisão com chão/teto
 
         if (
             bird.y - bird.radius < 0 ||
             bird.y + bird.radius >
                 canvas.height - groundHeight
         ) {
+
             endGame();
         }
     }
 }
 
 
-// =========================
-// DESENHO
-// =========================
+// ==============================
+// FUNDO
+// ==============================
 
 function drawBackground() {
 
@@ -284,8 +429,12 @@ function drawBackground() {
         canvas.height
     );
 
+
     ctx.fillStyle =
         "rgba(255,255,255,0.7)";
+
+
+    // Nuvem 1
 
     ctx.beginPath();
 
@@ -314,6 +463,9 @@ function drawBackground() {
     );
 
     ctx.fill();
+
+
+    // Nuvem 2
 
     ctx.beginPath();
 
@@ -345,9 +497,16 @@ function drawBackground() {
 }
 
 
+// ==============================
+// CANOS
+// ==============================
+
 function drawPipes() {
 
     for (const pipe of pipes) {
+
+
+        // Cano de cima
 
         ctx.fillStyle = "#58be43";
 
@@ -358,6 +517,7 @@ function drawPipes() {
             pipe.top
         );
 
+
         ctx.fillStyle = "#3d9c32";
 
         ctx.fillRect(
@@ -367,6 +527,7 @@ function drawPipes() {
             pipe.top
         );
 
+
         ctx.fillStyle = "#70d957";
 
         ctx.fillRect(
@@ -375,6 +536,9 @@ function drawPipes() {
             10,
             pipe.top
         );
+
+
+        // Tampa de cima
 
         ctx.fillStyle = "#58be43";
 
@@ -385,8 +549,12 @@ function drawPipes() {
             25
         );
 
+
+        // Cano de baixo
+
         const bottomY =
             pipe.top + pipeGap;
+
 
         ctx.fillStyle = "#58be43";
 
@@ -399,6 +567,7 @@ function drawPipes() {
                 bottomY
         );
 
+
         ctx.fillStyle = "#3d9c32";
 
         ctx.fillRect(
@@ -410,6 +579,7 @@ function drawPipes() {
                 bottomY
         );
 
+
         ctx.fillStyle = "#70d957";
 
         ctx.fillRect(
@@ -420,6 +590,9 @@ function drawPipes() {
                 groundHeight -
                 bottomY
         );
+
+
+        // Tampa de baixo
 
         ctx.fillStyle = "#58be43";
 
@@ -433,6 +606,10 @@ function drawPipes() {
 }
 
 
+// ==============================
+// CHÃO
+// ==============================
+
 function drawGround() {
 
     ctx.fillStyle = "#ded895";
@@ -444,6 +621,7 @@ function drawGround() {
         groundHeight
     );
 
+
     ctx.fillStyle = "#8bc34a";
 
     ctx.fillRect(
@@ -453,7 +631,9 @@ function drawGround() {
         12
     );
 
+
     ctx.fillStyle = "#6da33a";
+
 
     for (
         let x = 0;
@@ -473,122 +653,170 @@ function drawGround() {
 }
 
 
-// =========================
+// ==============================
 // PASSARINHO
-// =========================
+// ==============================
 
 function drawBird() {
 
     const image =
         birdImages[selectedSkin];
 
+
+    // Se a imagem ainda não carregou
+
     if (
         !image ||
         !image.complete
     ) {
+
         return;
     }
 
+
     ctx.save();
+
 
     ctx.translate(
         bird.x,
         bird.y
     );
 
+
     ctx.rotate(
         bird.rotation
     );
 
+
     const size = 42;
 
+
     ctx.drawImage(
+
         image,
+
         -size / 2,
+
         -size / 2,
+
         size,
+
         size
     );
+
 
     ctx.restore();
 }
 
 
-// =========================
-// DESENHO COMPLETO
-// =========================
+// ==============================
+// DESENHAR
+// ==============================
 
 function draw() {
 
     drawBackground();
+
     drawPipes();
+
     drawGround();
+
     drawBird();
 }
 
 
+// ==============================
+// LOOP
+// ==============================
+
 function loop() {
 
     update();
+
     draw();
 
     requestAnimationFrame(loop);
 }
 
 
-// =========================
-// MENUS
-// =========================
+// ==============================
+// INICIAR
+// ==============================
 
 function startGame() {
+
     resetGame();
 }
 
+
+// ==============================
+// ABRIR SKINS
+// ==============================
 
 function openSkins() {
 
     gameRunning = false;
 
-    menu.classList.add("hidden");
-    gameOverScreen.classList.add("hidden");
 
-    skinsMenu.classList.remove("hidden");
+    menu.classList.add("hidden");
+
+    gameOverScreen.classList.add(
+        "hidden"
+    );
+
+
+    skinsMenu.classList.remove(
+        "hidden"
+    );
+
 
     createSkinMenu();
 }
 
 
+// ==============================
+// VOLTAR DAS SKINS
+// ==============================
+
 function closeSkins() {
 
-    skinsMenu.classList.add("hidden");
+    skinsMenu.classList.add(
+        "hidden"
+    );
 
-    menu.classList.remove("hidden");
+    menu.classList.remove(
+        "hidden"
+    );
 }
 
 
-// =========================
+// ==============================
 // BOTÕES
-// =========================
+// ==============================
 
 startButton.addEventListener(
     "click",
     startGame
 );
 
+
 restartButton.addEventListener(
     "click",
     startGame
 );
+
 
 skinsButton.addEventListener(
     "click",
     openSkins
 );
 
+
 gameOverSkinsButton.addEventListener(
     "click",
     openSkins
 );
+
 
 backButton.addEventListener(
     "click",
@@ -596,9 +824,9 @@ backButton.addEventListener(
 );
 
 
-// =========================
+// ==============================
 // TECLADO
-// =========================
+// ==============================
 
 document.addEventListener(
     "keydown",
@@ -608,9 +836,13 @@ document.addEventListener(
 
             event.preventDefault();
 
+
             if (!gameRunning) {
+
                 startGame();
+
             } else {
+
                 flap();
             }
         }
@@ -618,26 +850,29 @@ document.addEventListener(
 );
 
 
-// =========================
+// ==============================
 // MOUSE
-// =========================
+// ==============================
 
 canvas.addEventListener(
     "mousedown",
     () => {
 
         if (!gameRunning) {
+
             startGame();
+
         } else {
+
             flap();
         }
     }
 );
 
 
-// =========================
+// ==============================
 // CELULAR
-// =========================
+// ==============================
 
 canvas.addEventListener(
     "touchstart",
@@ -645,11 +880,16 @@ canvas.addEventListener(
 
         event.preventDefault();
 
+
         if (!gameRunning) {
+
             startGame();
+
         } else {
+
             flap();
         }
+
     },
     {
         passive: false
@@ -657,17 +897,13 @@ canvas.addEventListener(
 );
 
 
-// =========================
+// ==============================
 // INICIALIZAÇÃO
-// =========================
+// ==============================
 
 bestScore.textContent = best;
 
 createSkinMenu();
-
-resetGame();
-
-gameRunning = false;
 
 menu.classList.remove("hidden");
 
