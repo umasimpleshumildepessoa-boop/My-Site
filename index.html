@@ -14,15 +14,29 @@
         <div id="menu" class="overlay">
             <h1>FLAPPY</h1>
             <h2>🐦 BIRD</h2>
+
             <button id="startButton">JOGAR</button>
+            <button id="skinsButton" class="secondaryButton">SKINS</button>
+
             <p>Espaço / Clique para voar</p>
+        </div>
+
+        <div id="skinsMenu" class="overlay hidden">
+            <h1>SKINS</h1>
+
+            <div id="skinList" class="skin-list"></div>
+
+            <button id="backButton" class="secondaryButton">VOLTAR</button>
         </div>
 
         <div id="gameOver" class="overlay hidden">
             <h1>GAME OVER</h1>
+
             <p>Pontuação: <span id="finalScore">0</span></p>
             <p>Recorde: <span id="bestScore">0</span></p>
+
             <button id="restartButton">JOGAR NOVAMENTE</button>
+            <button id="gameOverSkinsButton" class="secondaryButton">SKINS</button>
         </div>
 
         <div id="score">0</div>
