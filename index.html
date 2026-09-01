@@ -6,74 +6,72 @@
     <title>Flappy Bird</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <div class="game">
+<div class="game">
 
-        <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
 
-        <!-- MENU PRINCIPAL -->
-        <div id="menu" class="overlay">
+    <!-- MENU PRINCIPAL -->
+    <div id="menu" class="overlay">
 
-            <h1>FLAPPY</h1>
-            <h2>🐦 BIRD</h2>
+        <h1>FLAPPY</h1>
+        <h2>🐦 BIRD</h2>
 
+        <div class="menu-buttons">
             <button id="startButton">JOGAR</button>
-
-            <button id="skinsButton">
-                SKINS
-            </button>
-
-            <p>Espaço / Clique para voar</p>
-
+            <button id="skinsButton">SKINS</button>
         </div>
 
-
-        <!-- MENU DE SKINS -->
-        <div id="skinsMenu" class="overlay hidden">
-
-            <h1>SKINS</h1>
-
-            <div id="skinList"></div>
-
-            <button id="backButton">
-                VOLTAR
-            </button>
-
-        </div>
-
-
-        <!-- GAME OVER -->
-        <div id="gameOver" class="overlay hidden">
-
-            <h1>GAME OVER</h1>
-
-            <p>
-                Pontuação:
-                <span id="finalScore">0</span>
-            </p>
-
-            <p>
-                Recorde:
-                <span id="bestScore">0</span>
-            </p>
-
-            <button id="restartButton">
-                JOGAR NOVAMENTE
-            </button>
-
-            <button id="gameOverSkinsButton">
-                SKINS
-            </button>
-
-        </div>
-
-
-        <div id="score">0</div>
+        <p>Espaço / Clique para voar</p>
 
     </div>
 
-    <script src="script.js"></script>
+
+    <!-- MENU DE SKINS -->
+    <div id="skinsMenu" class="overlay hidden">
+
+        <h1>SKINS</h1>
+
+        <div id="skinList"></div>
+
+        <button id="backButton">VOLTAR</button>
+
+    </div>
+
+
+    <!-- GAME OVER -->
+    <div id="gameOver" class="overlay hidden">
+
+        <h1>GAME OVER</h1>
+
+        <p>
+            Pontuação:
+            <span id="finalScore">0</span>
+        </p>
+
+        <p>
+            Recorde:
+            <span id="bestScore">0</span>
+        </p>
+
+        <button id="restartButton">
+            JOGAR NOVAMENTE
+        </button>
+
+        <button id="gameOverSkinsButton">
+            SKINS
+        </button>
+
+    </div>
+
+
+    <div id="score">0</div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
