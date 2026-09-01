@@ -41,9 +41,7 @@ canvas {
 }
 
 
-/* =========================
-   MENUS
-========================= */
+/* MENU */
 
 .overlay {
     position: absolute;
@@ -84,32 +82,7 @@ canvas {
 }
 
 
-/* =========================
-   BOTÕES DO MENU
-========================= */
-
-.menu-buttons {
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    gap: 14px;
-
-    margin-top: 5px;
-}
-
-.menu-buttons button {
-    width: 180px;
-
-    margin: 0;
-}
-
-
-/* =========================
-   BOTÕES
-========================= */
+/* BOTÕES */
 
 button {
     border: none;
@@ -118,7 +91,9 @@ button {
 
     padding: 14px 28px;
 
-    margin: 6px;
+    margin: 7px;
+
+    min-width: 180px;
 
     font-size: 18px;
 
@@ -146,18 +121,14 @@ button:active {
 }
 
 
-/* =========================
-   ESCONDER
-========================= */
+/* ESCONDER */
 
 .hidden {
     display: none !important;
 }
 
 
-/* =========================
-   PONTUAÇÃO
-========================= */
+/* PONTUAÇÃO */
 
 #score {
     position: absolute;
@@ -183,9 +154,7 @@ button:active {
 }
 
 
-/* =========================
-   SKINS
-========================= */
+/* SKINS */
 
 #skinList {
     display: flex;
@@ -197,9 +166,9 @@ button:active {
 
     margin: 25px 0;
 
-    flex-wrap: wrap;
-
     max-width: 330px;
+
+    flex-wrap: wrap;
 }
 
 .skin {
