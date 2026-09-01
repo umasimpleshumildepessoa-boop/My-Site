@@ -6,45 +6,28 @@ const ctx = canvas.getContext("2d");
 // ELEMENTOS
 // ==============================
 
-const menu =
-    document.getElementById("menu");
+const menu = document.getElementById("menu");
+const skinsMenu = document.getElementById("skinsMenu");
+const gameOverScreen = document.getElementById("gameOver");
 
-const skinsMenu =
-    document.getElementById("skinsMenu");
+const scoreText = document.getElementById("score");
+const finalScore = document.getElementById("finalScore");
+const bestScore = document.getElementById("bestScore");
 
-const gameOverScreen =
-    document.getElementById("gameOver");
+const startButton = document.getElementById("startButton");
+const restartButton = document.getElementById("restartButton");
 
-const scoreText =
-    document.getElementById("score");
-
-const finalScore =
-    document.getElementById("finalScore");
-
-const bestScore =
-    document.getElementById("bestScore");
-
-const startButton =
-    document.getElementById("startButton");
-
-const restartButton =
-    document.getElementById("restartButton");
-
-const skinsButton =
-    document.getElementById("skinsButton");
-
+const skinsButton = document.getElementById("skinsButton");
 const gameOverSkinsButton =
     document.getElementById("gameOverSkinsButton");
 
-const backButton =
-    document.getElementById("backButton");
+const backButton = document.getElementById("backButton");
 
-const skinList =
-    document.getElementById("skinList");
+const skinList = document.getElementById("skinList");
 
 
 // ==============================
-// VARIÁVEIS DO JOGO
+// JOGO
 // ==============================
 
 let bird;
@@ -63,15 +46,10 @@ let gameStarted = false;
 // ==============================
 
 const gravity = 0.42;
-
 const jumpPower = -7.5;
-
 const pipeSpeed = 2.5;
-
 const pipeWidth = 65;
-
 const pipeGap = 155;
-
 const groundHeight = 55;
 
 
@@ -85,22 +63,15 @@ const skins = [
     "Skin3.png"
 ];
 
-
-// Skin salva no navegador
-
 let selectedSkin =
     localStorage.getItem("flappySkin");
-
-
-// Se não existir uma skin salva,
-// usa Skin1
 
 if (!skins.includes(selectedSkin)) {
     selectedSkin = "Skin1.png";
 }
 
 
-// Imagens
+// Carregar imagens
 
 const birdImages = {};
 
@@ -115,7 +86,7 @@ for (const skin of skins) {
 
 
 // ==============================
-// MENU DE SKINS
+// CRIAR MENU DE SKINS
 // ==============================
 
 function createSkinMenu() {
@@ -124,23 +95,17 @@ function createSkinMenu() {
 
     for (const skin of skins) {
 
-        const button =
+        const skinButton =
             document.createElement("div");
 
-        button.className = "skin";
+        skinButton.className = "skin";
 
-
-        // Marca a skin selecionada
 
         if (skin === selectedSkin) {
 
-            button.classList.add(
-                "selected"
-            );
+            skinButton.classList.add("selected");
         }
 
-
-        // Imagem
 
         const image =
             document.createElement("img");
@@ -151,14 +116,15 @@ function createSkinMenu() {
         image.alt = skin;
 
 
-        button.appendChild(image);
+        skinButton.appendChild(image);
 
 
-        // Quando clicar
-
-        button.addEventListener(
+        skinButton.addEventListener(
             "click",
-            function () {
+            function(event) {
+
+                event.preventDefault();
+                event.stopPropagation();
 
                 selectedSkin = skin;
 
@@ -172,7 +138,7 @@ function createSkinMenu() {
         );
 
 
-        skinList.appendChild(button);
+        skinList.appendChild(skinButton);
     }
 }
 
@@ -210,9 +176,9 @@ function resetGame() {
 
     menu.classList.add("hidden");
 
-    gameOverScreen.classList.add("hidden");
-
     skinsMenu.classList.add("hidden");
+
+    gameOverScreen.classList.add("hidden");
 
 
     addPipe();
@@ -220,7 +186,7 @@ function resetGame() {
 
 
 // ==============================
-// ADICIONAR CANO
+// CANO
 // ==============================
 
 function addPipe() {
@@ -258,7 +224,9 @@ function addPipe() {
 
 function flap() {
 
-    if (!gameRunning) return;
+    if (!gameRunning) {
+        return;
+    }
 
     gameStarted = true;
 
@@ -298,118 +266,124 @@ function endGame() {
 
 
 // ==============================
-// ATUALIZAÇÃO
+// ATUALIZAR
 // ==============================
 
 function update() {
 
-    if (!gameRunning) return;
+    if (!gameRunning) {
+        return;
+    }
 
 
-    if (gameStarted) {
-
-        bird.velocity += gravity;
-
-        bird.y += bird.velocity;
+    if (!gameStarted) {
+        return;
+    }
 
 
-        bird.rotation =
-            Math.min(
-                Math.max(
-                    bird.velocity * 0.08,
-                    -0.5
-                ),
-                1.2
-            );
+    bird.velocity += gravity;
+
+    bird.y += bird.velocity;
 
 
-        for (const pipe of pipes) {
-
-            pipe.x -= pipeSpeed;
-
-
-            // Pontuação
-
-            if (
-                !pipe.scored &&
-                pipe.x + pipeWidth < bird.x
-            ) {
-
-                pipe.scored = true;
-
-                score++;
-
-                scoreText.textContent =
-                    score;
-            }
-
-
-            // Colisão horizontal
-
-            const hitX =
-                bird.x + bird.radius > pipe.x &&
-                bird.x - bird.radius <
-                    pipe.x + pipeWidth;
-
-
-            // Cano superior
-
-            const hitTop =
-                bird.y - bird.radius <
-                pipe.top;
-
-
-            // Cano inferior
-
-            const bottomPipeY =
-                pipe.top + pipeGap;
-
-
-            const hitBottom =
-                bird.y + bird.radius >
-                bottomPipeY;
-
-
-            if (
-                hitX &&
-                (hitTop || hitBottom)
-            ) {
-
-                endGame();
-            }
-        }
-
-
-        // Remove canos antigos
-
-        pipes = pipes.filter(
-            pipe =>
-                pipe.x + pipeWidth > 0
+    bird.rotation =
+        Math.min(
+            Math.max(
+                bird.velocity * 0.08,
+                -0.5
+            ),
+            1.2
         );
 
 
-        // Adiciona novo cano
+    for (const pipe of pipes) {
+
+        pipe.x -= pipeSpeed;
+
+
+        // Pontuação
 
         if (
-            pipes.length === 0 ||
-            pipes[pipes.length - 1].x <
-                canvas.width - 220
+            !pipe.scored &&
+            pipe.x + pipeWidth < bird.x
         ) {
 
-            addPipe();
+            pipe.scored = true;
+
+            score++;
+
+            scoreText.textContent =
+                score;
         }
 
 
-        // Colisão com chão/teto
+        // Colisão X
+
+        const hitX =
+            bird.x + bird.radius > pipe.x &&
+            bird.x - bird.radius <
+                pipe.x + pipeWidth;
+
+
+        // Cano de cima
+
+        const hitTop =
+            bird.y - bird.radius <
+            pipe.top;
+
+
+        // Cano de baixo
+
+        const bottomPipeY =
+            pipe.top + pipeGap;
+
+
+        const hitBottom =
+            bird.y + bird.radius >
+            bottomPipeY;
+
 
         if (
-            bird.y - bird.radius < 0 ||
-            bird.y + bird.radius >
-                canvas.height - groundHeight
+            hitX &&
+            (hitTop || hitBottom)
         ) {
 
             endGame();
+
+            return;
         }
+    }
+
+
+    // Remover canos antigos
+
+    pipes = pipes.filter(
+        pipe =>
+            pipe.x + pipeWidth > 0
+    );
+
+
+    // Criar novo cano
+
+    if (
+        pipes.length === 0 ||
+        pipes[pipes.length - 1].x <
+            canvas.width - 220
+    ) {
+
+        addPipe();
+    }
+
+
+    // Teto ou chão
+
+    if (
+        bird.y - bird.radius < 0 ||
+        bird.y + bird.radius >
+            canvas.height - groundHeight
+    ) {
+
+        endGame();
     }
 }
 
@@ -505,7 +479,6 @@ function drawPipes() {
 
     for (const pipe of pipes) {
 
-
         // Cano de cima
 
         ctx.fillStyle = "#58be43";
@@ -538,7 +511,7 @@ function drawPipes() {
         );
 
 
-        // Tampa de cima
+        // Tampa
 
         ctx.fillStyle = "#58be43";
 
@@ -550,7 +523,7 @@ function drawPipes() {
         );
 
 
-        // Cano de baixo
+        // Cano inferior
 
         const bottomY =
             pipe.top + pipeGap;
@@ -592,7 +565,7 @@ function drawPipes() {
         );
 
 
-        // Tampa de baixo
+        // Tampa inferior
 
         ctx.fillStyle = "#58be43";
 
@@ -663,11 +636,10 @@ function drawBird() {
         birdImages[selectedSkin];
 
 
-    // Se a imagem ainda não carregou
-
     if (
         !image ||
-        !image.complete
+        !image.complete ||
+        image.naturalWidth === 0
     ) {
 
         return;
@@ -692,15 +664,10 @@ function drawBird() {
 
 
     ctx.drawImage(
-
         image,
-
         -size / 2,
-
         -size / 2,
-
         size,
-
         size
     );
 
@@ -740,20 +707,16 @@ function loop() {
 
 
 // ==============================
-// INICIAR
-// ==============================
-
-function startGame() {
-
-    resetGame();
-}
-
-
-// ==============================
 // ABRIR SKINS
 // ==============================
 
-function openSkins() {
+function openSkins(event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
 
     gameRunning = false;
 
@@ -775,10 +738,16 @@ function openSkins() {
 
 
 // ==============================
-// VOLTAR DAS SKINS
+// VOLTAR
 // ==============================
 
-function closeSkins() {
+function closeSkins(event) {
+
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
 
     skinsMenu.classList.add(
         "hidden"
@@ -791,18 +760,30 @@ function closeSkins() {
 
 
 // ==============================
-// BOTÕES
+// EVENTOS DOS BOTÕES
 // ==============================
 
 startButton.addEventListener(
     "click",
-    startGame
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        resetGame();
+    }
 );
 
 
 restartButton.addEventListener(
     "click",
-    startGame
+    function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        resetGame();
+    }
 );
 
 
@@ -830,16 +811,18 @@ backButton.addEventListener(
 
 document.addEventListener(
     "keydown",
-    event => {
+    function(event) {
 
-        if (event.code === "Space") {
+        if (
+            event.code === "Space" &&
+            skinsMenu.classList.contains("hidden")
+        ) {
 
             event.preventDefault();
 
-
             if (!gameRunning) {
 
-                startGame();
+                resetGame();
 
             } else {
 
@@ -856,11 +839,11 @@ document.addEventListener(
 
 canvas.addEventListener(
     "mousedown",
-    () => {
+    function() {
 
         if (!gameRunning) {
 
-            startGame();
+            resetGame();
 
         } else {
 
@@ -876,14 +859,14 @@ canvas.addEventListener(
 
 canvas.addEventListener(
     "touchstart",
-    event => {
+    function(event) {
 
         event.preventDefault();
 
 
         if (!gameRunning) {
 
-            startGame();
+            resetGame();
 
         } else {
 
